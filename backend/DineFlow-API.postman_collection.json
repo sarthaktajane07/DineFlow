@@ -1,0 +1,259 @@
+{
+    "info": {
+        "name": "DineFlow API",
+        "description": "Complete API collection for DineFlow Restaurant Management System",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:5000/api"
+        },
+        {
+            "key": "token",
+            "value": "YOUR_JWT_TOKEN_HERE"
+        }
+    ],
+    "item": [
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/auth/login",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"admin@dineflow.com\",\n  \"password\": \"admin123\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "Register",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/auth/register",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"fullName\": \"New User\",\n  \"email\": \"newuser@dineflow.com\",\n  \"password\": \"password123\",\n  \"role\": \"staff\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "Get Me",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/auth/me"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Tables",
+            "item": [
+                {
+                    "name": "Get All Tables",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/tables"
+                    }
+                },
+                {
+                    "name": "Create Table",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/tables",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"tableNumber\": \"9\",\n  \"seats\": 4,\n  \"zone\": \"indoor\",\n  \"shape\": \"square\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "Update Table Status",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/tables/:id",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"status\": \"occupied\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "Get Table Stats",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/tables/stats/overview"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Waitlist",
+            "item": [
+                {
+                    "name": "Get Waitlist",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/waitlist"
+                    }
+                },
+                {
+                    "name": "Add to Waitlist",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/waitlist",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"guestName\": \"John Doe\",\n  \"phoneNumber\": \"+1234567890\",\n  \"partySize\": 4,\n  \"estimatedWaitTime\": 25,\n  \"notificationPreference\": \"sms\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "Notify Guest",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/waitlist/:id/notify",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"tableNumber\": \"5\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "Seat Guest",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/waitlist/:id/seat",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"tableId\": \"TABLE_ID_HERE\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "Remove from Waitlist",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/waitlist/:id",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"reason\": \"cancelled\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "Get Waitlist Stats",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/waitlist/stats/overview"
+                    }
+                }
+            ]
+        }
+    ]
+}
