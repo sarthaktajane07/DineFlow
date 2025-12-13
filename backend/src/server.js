@@ -28,7 +28,7 @@ const httpServer = createServer(app);
 // Initialize Socket.IO
 const io = new Server(httpServer, {
     cors: {
-        origin: process.env.CLIENT_URL || 'http://localhost:3001',
+        origin: "*", // Allow all origins
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         credentials: true,
     },
@@ -46,7 +46,7 @@ app.use(helmet());
 // CORS
 app.use(
     cors({
-        origin: process.env.CLIENT_URL || 'http://localhost:3001',
+        origin: true, // Allow all origins
         credentials: true,
     })
 );
