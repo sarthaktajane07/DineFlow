@@ -1,7 +1,10 @@
 import axios from 'axios';
 // Create a configured axios instance
+const apiUrl = import.meta.env.VITE_API_URL || '/api';
+console.log('Using API URL:', apiUrl);
+
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || '/api',
+    baseURL: apiUrl,
     headers: {
         'Content-Type': 'application/json',
     },
