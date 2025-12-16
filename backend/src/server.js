@@ -41,14 +41,19 @@ socketHandler.initialize(io);
 // Connect to database
 connectDB();
 
-// Security middleware
-app.use(helmet());
+// Security middleware - Configure helmet to allow CORS
+app.use(helmet({
+    contentSecurityPolicy: false, // Disable CSP to allow CORS
+    crossOriginResourcePolicy: false, // Allow cross-origin requests
+}));
 
-// CORS
+// CORS - Must be before routes
 app.use(
     cors({
         origin: true, // Allow all origins
         credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
     })
 );
 
