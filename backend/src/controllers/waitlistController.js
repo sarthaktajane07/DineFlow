@@ -3,6 +3,7 @@ import Table from '../models/Table.js';
 import ServiceHistory from '../models/ServiceHistory.js';
 import socketHandler from '../socket/socketHandler.js';
 import twilioService from '../services/twilioService.js';
+import activityService from '../services/activityService.js';
 
 /**
  * @desc    Get all waitlist entries
@@ -123,6 +124,15 @@ export const addToWaitlist = async (req, res, next) => {
         // Emit socket event
         socketHandler.emitWaitlistAdded(entry);
 
+        // Log activity
+        await activityService.log({
+            type: 'waitlist',
+            action: 'add',
+            description: `Added ${guestName} (Party of ${partySize}) to waitlist`,
+            userId: req.user._id,
+            metadata: { waitlistId: entry._id, targetName: guestName }
+        });
+
         res.status(201).json({
             success: true,
             message: 'Added to waitlist successfully',
@@ -169,6 +179,15 @@ export const updateWaitlistEntry = async (req, res, next) => {
         // Emit socket event
         socketHandler.emitWaitlistUpdate(entry);
 
+        // Log activity
+        await activityService.log({
+            type: 'waitlist',
+            action: 'update',
+            description: `Updated waitlist entry for ${entry.guestName}`,
+            userId: req.user._id,
+            metadata: { waitlistId: entry._id, targetName: entry.guestName }
+        });
+
         res.status(200).json({
             success: true,
             message: 'Waitlist entry updated',
@@ -186,7 +205,7 @@ export const updateWaitlistEntry = async (req, res, next) => {
  */
 export const notifyGuest = async (req, res, next) => {
     try {
-        const { tableNumber } = req.body || {};
+        const { tableNumber, preference } = req.body || {};
 
         const entry = await WaitlistEntry.findById(req.params.id);
 
@@ -205,11 +224,14 @@ export const notifyGuest = async (req, res, next) => {
         }
 
         // Send notification
+        // Use provided preference, fallback to entry preference, fallback to 'sms'
+        const notifyMethod = preference || entry.notificationPreference || 'sms';
+
         const result = await twilioService.notifyTableReady(
             entry.guestName,
             entry.phoneNumber,
             tableNumber,
-            entry.notificationPreference
+            notifyMethod
         );
 
         // Update entry
@@ -226,6 +248,15 @@ export const notifyGuest = async (req, res, next) => {
         });
 
         socketHandler.emitWaitlistUpdate(entry);
+
+        // Log activity
+        await activityService.log({
+            type: 'notification',
+            action: 'send',
+            description: `Notified ${entry.guestName} for Table ${tableNumber} via ${notifyMethod}`,
+            userId: req.user._id,
+            metadata: { waitlistId: entry._id, targetName: entry.guestName }
+        });
 
         res.status(200).json({
             success: true,
@@ -302,6 +333,15 @@ export const seatGuest = async (req, res, next) => {
         socketHandler.emitWaitlistUpdate(entry);
         socketHandler.emitTableUpdate(table);
 
+        // Log activity
+        await activityService.log({
+            type: 'waitlist',
+            action: 'seat',
+            description: `Seated ${entry.guestName} at Table ${table.tableNumber}`,
+            userId: req.user._id,
+            metadata: { waitlistId: entry._id, tableId: table._id, targetName: entry.guestName }
+        });
+
         res.status(200).json({
             success: true,
             message: 'Guest seated successfully',
@@ -343,6 +383,15 @@ export const removeFromWaitlist = async (req, res, next) => {
 
         // Emit socket event
         socketHandler.emitWaitlistRemoved(entry._id);
+
+        // Log activity
+        await activityService.log({
+            type: 'waitlist',
+            action: 'remove',
+            description: `Removed ${entry.guestName} from waitlist (${reason || 'manual'})`,
+            userId: req.user._id,
+            metadata: { waitlistId: entry._id, targetName: entry.guestName }
+        });
 
         res.status(200).json({
             success: true,

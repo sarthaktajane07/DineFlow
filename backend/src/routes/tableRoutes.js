@@ -20,7 +20,7 @@ router.get('/stats/overview', getTableStats);
 // CRUD routes
 router.route('/')
     .get(getTables)
-    .post(authorize('manager'), createTable);
+    .post(authorize('manager', 'host', 'staff'), createTable);
 
 router.route('/:id')
     .get(getTable)

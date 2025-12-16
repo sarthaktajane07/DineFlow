@@ -1,5 +1,6 @@
 import Table from '../models/Table.js';
 import socketHandler from '../socket/socketHandler.js';
+import activityService from '../services/activityService.js';
 
 /**
  * @desc    Get all tables
@@ -69,6 +70,15 @@ export const createTable = async (req, res, next) => {
         // Emit socket event
         socketHandler.emitTableCreated(table);
 
+        // Log activity
+        await activityService.log({
+            type: 'table',
+            action: 'create',
+            description: `Created Table ${table.tableNumber} (${table.seats} seats)`,
+            userId: req.user._id,
+            metadata: { tableId: table._id }
+        });
+
         res.status(201).json({
             success: true,
             message: 'Table created successfully',
@@ -118,6 +128,18 @@ export const updateTable = async (req, res, next) => {
         // Emit socket event
         socketHandler.emitTableUpdate(table);
 
+        // Log activity
+        let updateDesc = `Updated Table ${table.tableNumber}`;
+        if (status) updateDesc += ` status to ${status}`;
+
+        await activityService.log({
+            type: 'table',
+            action: 'update',
+            description: updateDesc,
+            userId: req.user._id,
+            metadata: { tableId: table._id }
+        });
+
         res.status(200).json({
             success: true,
             message: 'Table updated successfully',
@@ -156,6 +178,15 @@ export const deleteTable = async (req, res, next) => {
 
         // Emit socket event
         socketHandler.emitTableDeleted(table._id);
+
+        // Log activity
+        await activityService.log({
+            type: 'table',
+            action: 'delete',
+            description: `Deleted Table ${table.tableNumber}`,
+            userId: req.user._id,
+            metadata: { tableId: table._id }
+        });
 
         res.status(200).json({
             success: true,

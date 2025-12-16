@@ -22,8 +22,7 @@ const tableSchema = new mongoose.Schema(
         },
         zone: {
             type: String,
-            enum: ['indoor', 'outdoor', 'bar', 'vip'],
-            default: 'indoor',
+            default: 'main',
         },
         position: {
             x: { type: Number, default: 0 },

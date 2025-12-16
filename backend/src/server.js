@@ -20,6 +20,7 @@ import socketHandler from './socket/socketHandler.js';
 import authRoutes from './routes/authRoutes.js';
 import tableRoutes from './routes/tableRoutes.js';
 import waitlistRoutes from './routes/waitlistRoutes.js';
+import activityRoutes from './routes/activityRoutes.js';
 
 // Initialize express app
 const app = express();
@@ -85,6 +86,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/tables', tableRoutes);
 app.use('/api/waitlist', waitlistRoutes);
+app.use('/api/activities', activityRoutes);
 
 // 404 handler
 app.use(notFound);

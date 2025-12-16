@@ -1,0 +1,32 @@
+services:
+  # Backend Service
+  - type: web
+    name: dineflow-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false # You will enter this in Render dashboard
+      - key: JWT_SECRET
+        generate: true
+      - key: CLIENT_URL
+        sync: false # Enter your Vercel URL here
+
+  # Frontend Service (Optional - Vercel is better for this, but Render can do both)
+  - type: web
+    name: dineflow-frontend
+    env: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: dineflow-backend
+          property: url
