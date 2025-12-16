@@ -1,6 +1,6 @@
 import axios from 'axios';
 // Create a configured axios instance
-const apiUrl = import.meta.env.VITE_API_URL || '/api';
+const apiUrl = import.meta.env.VITE_API_URL || 'https://dineflow-backend-16lw.onrender.com/api';
 console.log('Using API URL:', apiUrl);
 
 const api = axios.create({
