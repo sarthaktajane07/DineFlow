@@ -4,6 +4,7 @@
   "private": true,
   "description": "DineFlow Pro: Restaurant Table & Waitlist Management (Spring Boot + React + React Native Expo)",
   "scripts": {
+    "build": "npm --prefix web run build",
     "dev:backend": "cd backend-java && ./mvnw spring-boot:run -Dspring-boot.run.arguments=\"--server.port=5001\"",
     "build:backend": "cd backend-java && ./mvnw clean package -DskipTests",
     "test:backend": "cd backend-java && ./mvnw test",
