@@ -1,0 +1,27 @@
+server:
+  port: 5000
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/dineflow}
+  application:
+    name: dineflow-backend
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:dineflow-super-secret-jwt-key-must-be-at-least-256bits-long-for-hs256}
+    expiration: ${JWT_EXPIRE:604800000}
+  twilio:
+    account-sid: ${TWILIO_ACCOUNT_SID:}
+    auth-token: ${TWILIO_AUTH_TOKEN:}
+    phone-number: ${TWILIO_PHONE_NUMBER:}
+    whatsapp-number: ${TWILIO_WHATSAPP_NUMBER:}
+  cors:
+    allowed-origins: ${FRONTEND_URL:*}
+
+logging:
+  level:
+    com.dineflow: DEBUG

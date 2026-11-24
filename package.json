@@ -1,0 +1,24 @@
+{
+  "name": "dineflow-pro-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DineFlow Pro: Restaurant Table & Waitlist Management (Spring Boot + React + React Native Expo)",
+  "scripts": {
+    "dev:backend": "cd backend-java && ./mvnw spring-boot:run -Dspring-boot.run.arguments=\"--server.port=5001\"",
+    "build:backend": "cd backend-java && ./mvnw clean package -DskipTests",
+    "test:backend": "cd backend-java && ./mvnw test",
+    "build:shared": "cd shared && npm run build",
+    "dev:web": "cd web && npm run dev",
+    "build:web": "cd web && npm run build",
+    "start:mobile": "cd mobile && npx expo start",
+    "lint:web": "cd web && npm run lint"
+  },
+  "workspaces": [
+    "shared",
+    "web",
+    "mobile"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
